@@ -1,4 +1,4 @@
-import express from 'express';
+import express, {Request, Response} from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
@@ -30,6 +30,22 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   /**************************************************************************** */
 
   //! END @TODO1
+
+  app.get("/filteredimage", async (req: Request, res: Response) => {
+    const image_url = req.query?.image_url;
+
+    if(image_url === undefined){
+      return res.status(400).json({error: "Check the URL you are passing is formatted correctly"});
+    }
+
+    const resultImage = await filterImageFromURL(image_url);
+
+    try {
+      res.sendFile(resultImage, () => deleteLocalFiles([resultImage]));
+    } catch (error){
+      return res.status(422).json({error: 'Unable to process image with the provided url'})
+    }
+  });
   
   // Root Endpoint
   // Displays a simple message to the user
