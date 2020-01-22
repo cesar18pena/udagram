@@ -34,7 +34,7 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   app.get("/filteredimage", async (req: Request, res: Response) => {
     const image_url = req.query?.image_url;
 
-    if(image_url === undefined){
+    if(!image_url){
       return res.status(400).json({error: "Check the URL you are passing is formatted correctly"});
     }
 
